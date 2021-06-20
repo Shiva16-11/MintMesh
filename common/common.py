@@ -22,25 +22,28 @@ class ResponseBaseClass(View):
     def generate_response(self, response, request_body, source):
         payload = dict()
         payload['status'] = True if response else False
-        payload['summary'] =    "Country Name = {} |" \
-                                "Total Cases = {} |" \
-                                "Active Cases= {} |" \
-                                "Total Deaths = {} |" \
-                                "Recovery Rate ={:.2f} |" \
-                                "Percentage of Population Infected = {:.2f}".format(
-            request_body.get('country_name','Not Available'),
-            response.get("Total Case",None),
-            response.get("Total Active", None),
-            response.get("Total Deaths", None),
-            int(response.get("Total Recovered").replace(",",""))
-            /int(response.get("Total Case",'1').replace(",","")),
-            int(response.get("Total Case").replace(",", ""))
-            / int(response.get("Population", '1').replace(",", ""))
-        )
+        if response:
+            payload['summary'] =    "Country Name = {} |" \
+                                    "Total Cases = {} |" \
+                                    "Active Cases= {} |" \
+                                    "Total Deaths = {} |" \
+                                    "Recovery Rate ={:.2f} |" \
+                                    "Percentage of Population Infected = {:.2f}".format(
+                request_body.get('country_name','Not Available'),
+                response.get("Total Case",None),
+                response.get("Total Active", None),
+                response.get("Total Deaths", None),
+                int(response.get("Total Recovered").replace(",",""))
+                /int(response.get("Total Case",'1').replace(",","")),
+                int(response.get("Total Case").replace(",", ""))
+                / int(response.get("Population", '1').replace(",", ""))
+            )
 
-        payload['data'] = response
-        payload['source'] = source
-        return payload
+            payload['data'] = response
+            payload['source'] = source
+            return payload
+        else:
+            return "No Data Found"
 
 
 
